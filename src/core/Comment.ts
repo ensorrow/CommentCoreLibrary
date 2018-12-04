@@ -15,6 +15,10 @@ class CoreComment implements IComment {
   public mode:number = 1;
   public stime:number = 0;
   public text:string = '';
+  public username:string = '';
+  public avatar:string = '';
+  public image:string = '';
+  public emoji:string = '';
   public ttl:number = 4000;
   public dur:number = 4000;
   public cindex:number = -1;
@@ -146,6 +150,18 @@ class CoreComment implements IComment {
         }
       }
     }
+    if (init.hasOwnProperty('username')) {
+      this.username = init['username'];
+    }
+    if (init.hasOwnProperty('avatar')) {
+      this.avatar = init['avatar'];
+    }
+    if (init.hasOwnProperty('image')) {
+      this.image = init['image'];
+    }
+    if (init.hasOwnProperty('emoji')) {
+      this.emoji = init['emoji'];
+    }
   }
 
   /**
@@ -159,9 +175,16 @@ class CoreComment implements IComment {
       this.dom = document.createElement('div');
     }
     this.dom.className = this.parent.options.global.className;
-    this.dom.appendChild(document.createTextNode(this.text));
-    this.dom.textContent = this.text;
-    this.dom.innerText = this.text;
+    this.dom.innerHTML = (this.image || this.emoji) ?
+    `<img class="avatar" src="${this.avatar}" alt="avatar">
+    <span>${this.username}</span>
+    <div class="imageWrap"><img class="${this.emoji ? 'emoji' : 'image'}" src="${this.image || this.emoji}"></div>` :
+    `<img class="avatar" src="${this.avatar}" alt="avatar">
+    <span>${this.username}</span>
+    <div class="textWrap"><p>${this.text}</p></div>`
+    // this.dom.appendChild(document.createTextNode(this.text));
+    // this.dom.textContent = this.text;
+    // this.dom.innerText = this.text;
     this.size = this._size;
     if (this._color != 0xffffff) {
       this.color = this._color;

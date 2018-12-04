@@ -375,6 +375,10 @@ var CoreComment = (function () {
         this.mode = 1;
         this.stime = 0;
         this.text = '';
+        this.username = '';
+        this.avatar = '';
+        this.image = '';
+        this.emoji = '';
         this.ttl = 4000;
         this.dur = 4000;
         this.cindex = -1;
@@ -479,6 +483,18 @@ var CoreComment = (function () {
                 }
             }
         }
+        if (init.hasOwnProperty('username')) {
+            this.username = init['username'];
+        }
+        if (init.hasOwnProperty('avatar')) {
+            this.avatar = init['avatar'];
+        }
+        if (init.hasOwnProperty('image')) {
+            this.image = init['image'];
+        }
+        if (init.hasOwnProperty('emoji')) {
+            this.emoji = init['emoji'];
+        }
     }
     CoreComment.prototype.init = function (recycle) {
         if (recycle === void 0) { recycle = null; }
@@ -489,9 +505,9 @@ var CoreComment = (function () {
             this.dom = document.createElement('div');
         }
         this.dom.className = this.parent.options.global.className;
-        this.dom.appendChild(document.createTextNode(this.text));
-        this.dom.textContent = this.text;
-        this.dom.innerText = this.text;
+        this.dom.innerHTML = (this.image || this.emoji) ?
+            "<img class=\"avatar\" src=\"" + this.avatar + "\" alt=\"avatar\">\n    <span>" + this.username + "</span>\n    <div class=\"imageWrap\"><img class=\"" + (this.emoji ? 'emoji' : 'image') + "\" src=\"" + (this.image || this.emoji) + "\"></div>" :
+            "<img class=\"avatar\" src=\"" + this.avatar + "\" alt=\"avatar\">\n    <span>" + this.username + "</span>\n    <div class=\"textWrap\"><p>" + this.text + "</p></div>";
         this.size = this._size;
         if (this._color != 0xffffff) {
             this.color = this._color;
