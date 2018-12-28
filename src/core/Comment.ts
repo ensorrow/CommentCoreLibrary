@@ -22,6 +22,7 @@ class CoreComment implements IComment {
   public ttl:number = 4000;
   public dur:number = 4000;
   public cindex:number = -1;
+  public special:boolean = false;
 
   public motion:Array<Object> = [];
   public movable:boolean = true;
@@ -162,6 +163,9 @@ class CoreComment implements IComment {
     if (init.hasOwnProperty('emoji')) {
       this.emoji = init['emoji'];
     }
+    if (init.hasOwnProperty('special')) {
+      this.special = init['special'];
+    }
   }
 
   /**
@@ -176,12 +180,14 @@ class CoreComment implements IComment {
     }
     this.dom.className = this.parent.options.global.className;
     this.dom.innerHTML = (this.image || this.emoji) ?
-    `<img class="avatar" src="${this.avatar}" alt="avatar">
-    <span>${this.username}</span>
-    <div class="imageWrap"><img class="${this.emoji ? 'emoji' : 'image'}" src="${this.image || this.emoji}"></div>` :
-    `<img class="avatar" src="${this.avatar}" alt="avatar">
-    <span>${this.username}</span>
-    <div class="textWrap"><p>${this.text}</p></div>`
+      `<img class="avatar" src="${this.avatar}" alt="avatar">
+      <span>${this.username}</span>
+      <div class="imageWrap"><img class="${this.emoji ? 'emoji' : 'image'}" src="${this.image || this.emoji}"></div>` :
+      `<img class="avatar" src="${this.avatar}" alt="avatar">
+      <span>${this.username}</span>
+      <div class="textWrap"><p>${this.text}</p></div>`
+    this.special && this.dom.classList.add('special');
+    (this.image || this.emoji) && this.dom.classList.add('imgCmt');
     // this.dom.appendChild(document.createTextNode(this.text));
     // this.dom.textContent = this.text;
     // this.dom.innerText = this.text;
@@ -276,9 +282,10 @@ class CoreComment implements IComment {
   }
 
   get height():number {
-    if (this._height === null || this._height === undefined) {
-      this._height = this.dom.offsetHeight;
-    }
+    // if (this._height === null || this._height === undefined) {
+    //   this._height = this.dom.offsetHeight;
+    // }
+    this._height = this.dom.offsetHeight;
     return this._height;
   }
 

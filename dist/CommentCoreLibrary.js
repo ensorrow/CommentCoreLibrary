@@ -382,6 +382,7 @@ var CoreComment = (function () {
         this.ttl = 4000;
         this.dur = 4000;
         this.cindex = -1;
+        this.special = false;
         this.motion = [];
         this.movable = true;
         this._alphaMotion = null;
@@ -495,6 +496,9 @@ var CoreComment = (function () {
         if (init.hasOwnProperty('emoji')) {
             this.emoji = init['emoji'];
         }
+        if (init.hasOwnProperty('special')) {
+            this.special = init['special'];
+        }
     }
     CoreComment.prototype.init = function (recycle) {
         if (recycle === void 0) { recycle = null; }
@@ -506,8 +510,10 @@ var CoreComment = (function () {
         }
         this.dom.className = this.parent.options.global.className;
         this.dom.innerHTML = (this.image || this.emoji) ?
-            "<img class=\"avatar\" src=\"" + this.avatar + "\" alt=\"avatar\">\n    <span>" + this.username + "</span>\n    <div class=\"imageWrap\"><img class=\"" + (this.emoji ? 'emoji' : 'image') + "\" src=\"" + (this.image || this.emoji) + "\"></div>" :
-            "<img class=\"avatar\" src=\"" + this.avatar + "\" alt=\"avatar\">\n    <span>" + this.username + "</span>\n    <div class=\"textWrap\"><p>" + this.text + "</p></div>";
+            "<img class=\"avatar\" src=\"" + this.avatar + "\" alt=\"avatar\">\n      <span>" + this.username + "</span>\n      <div class=\"imageWrap\"><img class=\"" + (this.emoji ? 'emoji' : 'image') + "\" src=\"" + (this.image || this.emoji) + "\"></div>" :
+            "<img class=\"avatar\" src=\"" + this.avatar + "\" alt=\"avatar\">\n      <span>" + this.username + "</span>\n      <div class=\"textWrap\"><p>" + this.text + "</p></div>";
+        this.special && this.dom.classList.add('special');
+        (this.image || this.emoji) && this.dom.classList.add('imgCmt');
         this.size = this._size;
         if (this._color != 0xffffff) {
             this.color = this._color;
@@ -647,9 +653,7 @@ var CoreComment = (function () {
     });
     Object.defineProperty(CoreComment.prototype, "height", {
         get: function () {
-            if (this._height === null || this._height === undefined) {
-                this._height = this.dom.offsetHeight;
-            }
+            this._height = this.dom.offsetHeight;
             return this._height;
         },
         set: function (h) {
@@ -985,7 +989,7 @@ var CommentSpaceAllocator = (function () {
         this._pools = [
             []
         ];
-        this.avoid = 1;
+        this.avoid = 20;
         this._width = width;
         this._height = height;
     }

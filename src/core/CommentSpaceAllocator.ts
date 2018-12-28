@@ -22,7 +22,7 @@ class CommentSpaceAllocator implements ISpaceAllocator {
    * Number of pixels to avoid from last possible y-offset
    * @type {number}
    */
-  public avoid:number = 1;
+  public avoid:number = 20;
 
   /**
    * Constructs a space allocator
